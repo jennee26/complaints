@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost";
-$username = "usernini";
-$password = "12345678";
+$username = "root";
+$password = "";
 $database = "usernini";
 
 // Create connection
