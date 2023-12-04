@@ -1,0 +1,20 @@
+.pp-navbar-col1 {
+    width: 56%;
+    margin-right: 2%;
+    height: 100%;
+    float: left;
+    background-color: white;
+}
+.pp-navbar-col2 {
+    width: 20%;
+    height: 100%;
+    margin-right: 2%;
+    float: left;
+    background-color: white;
+}
+.pp-navbar-col3 {
+    width: 20%;
+    height: 100%;
+    float: right;
+    background-color: white;
+}
