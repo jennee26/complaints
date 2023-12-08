@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Include Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .col2 {
+            width: 50%;
+            height: 100vh;
+            margin-left: 1.5%;
+            float: left;
+            background-color: tomato;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center the content horizontally */
+        }
+
+        .write-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .write {
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 4px solid #ccc;
+            border-radius: 50px;
+            overflow: hidden;
+            width: 500px;
+            margin: auto;
+        }
+
+        .writebox {
+            position: relative;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        textarea {
+            width: calc(100% - 20px);
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            resize: none;
+        }
+
+        .input-icon {
+            display: flex;
+            gap: 10px;
+        }
+
+        .fa-lg {
+            font-size: 24px;
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        .post-button {
+            background-color: black;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .post-button:hover {
+            background-color: rgb(97, 92, 92);
+        }
+
+        .posts {
+            width: 500px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center the posts horizontally */
+        }
+
+        .post {
+            background-color: red;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 4px solid #ccc;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            padding: 20px;
+            width: 100%; /* Make the posts take full width */
+        }
+
+        .uploaded-files {
+            display: flex;
+            gap: 10px;
+            flex-wrap: auto;
+        }
+
+        .uploaded-file {
+            background-color: #f0f0f0;
+            padding: 5px 10px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="col2">
+        <div class="write" id="write">
+            <div class="writebox">
+                <textarea rows="4" id="postInput" placeholder="Write something...." required></textarea>
+                <div class="input-icon">
+                    <label for="cameraInput">
+                        <i class="fas fa-camera fa-lg" onclick="openCamera()"></i>
+                    </label>
+                    <input type="file" id="cameraInput" accept="image/*" capture="camera" style="display:none" onchange="displayFileName(this)">
+                    <label for="imageInput">
+                        <i class="fas fa-image fa-lg" onclick="openImageUploader()"></i>
+                    </label>
+                    <input type="file" id="imageInput" accept="image/*" style="display:none" onchange="displayFileName(this)">
+                    <label for="fileUpload">
+                        <i class="fas fa-file fa-lg" onclick="openFileUploader()"></i>
+                    </label>
+                    <input type="file" id="fileUpload" style="display:none" onchange="displayFileName(this)">
+                </div>
+                <button type="button" onclick="postContent()" class="post-button">Post</button>
+            </div>
+        </div>
+        <div class="feed">my feed</div>
+        <div class="posts" id="posts"></div> <!-- Moved the posts container inside col2 -->
+    </div>
+
+    <!-- Include Font Awesome script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+
+    <script>
+        function displayFileName(input) {
+            const fileName = input.files[0].name;
+            alert(`Selected file: ${fileName}`);
+        }
+    
+        function openCamera() {
+            document.getElementById('cameraInput').click();
+        }
+    
+        function openImageUploader() {
+            document.getElementById('imageInput').click();
+        }
+    
+        function openFileUploader() {
+            document.getElementById('fileUpload').click();
+        }
+    
+        function postContent() {
+            const postInput = document.getElementById('postInput').value;
+            const postsContainer = document.querySelector('.col2 .posts');  // Changed the line to target the correct container
+    
+            if (postInput || document.getElementById('cameraInput').files.length > 0 || document.getElementById('imageInput').files.length > 0 || document.getElementById('fileUpload').files.length > 0) {
+                const postDiv = document.createElement('div');
+                postDiv.className = 'post';
+                postDiv.innerHTML = `
+                    <p>${postInput}</p>
+                    <p>Uploaded Files:</p>
+                    <div class="uploaded-files">
+                        ${getUploadedFiles('cameraInput')}
+                        ${getUploadedFiles('imageInput')}
+                        ${getUploadedFiles('fileUpload')}
+                    </div>
+                `;
+                postsContainer.prepend(postDiv);
+    
+                // Clear input fields
+                document.getElementById('postInput').value = '';
+                document.getElementById('cameraInput').value = '';
+                document.getElementById('imageInput').value = '';
+                document.getElementById('fileUpload').value = '';
+            } else {
+                alert('Please enter some content or upload a file.');
+            }
+        }
+    
+        function getUploadedFiles(inputId) {
+            const input = document.getElementById(inputId);
+            const files = input.files;
+            let filesList = '';
+            for (let i = 0; i < files.length; i++) {
+                filesList += `<div class="uploaded-file">${files[i].name}</div>`;
+            }
+            return filesList;
+        }
+    </script>
+
+</body>
+</html>

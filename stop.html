@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload Example</title>
+</head>
+<body>
+
+<form id="uploadForm" enctype="multipart/form-data">
+    <label for="fileInput">Choose a file:</label>
+    <input type="file" id="fileInput" name="file" accept="image/*"> <!-- "accept" attribute restricts to image files -->
+    <button type="button" onclick="uploadFile()">Upload</button>
+</form>
+
+<div id="output"></div>
+
+<script>
+    function uploadFile() {
+        var fileInput = document.getElementById('fileInput');
+        var file = fileInput.files[0];
+
+        if (file) {
+            var formData = new FormData();
+            formData.append('file', file);
+
+            // Here you would typically make an AJAX request to the server to handle the file upload
+            // Example using fetch API (you might want to replace this with your server-side logic)
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('output').innerHTML = 'File uploaded successfully: ' + data.filename;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('output').innerHTML = 'Error uploading file.';
+            });
+        } else {
+            document.getElementById('output').innerHTML = 'Please choose a file.';
+        }
+    }
+</script>
+
+</body>
+</html>
